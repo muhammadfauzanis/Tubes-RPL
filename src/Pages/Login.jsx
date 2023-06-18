@@ -6,11 +6,12 @@ import {
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-
+import Cookies from 'js-cookie'
 import heroImage from "../assets/images/hero.jpg";
+import axios from "axios";
 
 function Login() {
   const [visible, setVisible] = useState(true);
@@ -20,26 +21,27 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  //  data dummy
-  const users = [
-    { username: "John", password: "john123" },
-    { username: "dadang", password: "dadang111" },
-  ];
 
   const navigate = useNavigate();
+  useEffect(() => {
+    if (Cookies.get('username') !== undefined) {
+      navigate('/')
+    }
+
+  })
 
   const onSubmit = (data) => {
-    const userValidation = users.find(
-      (user) =>
-        user.username === data.username && user.password === data.password
-    );
-
-    if (userValidation) {
-      alert("Login berhasil");
-      navigate("/");
-    } else {
-      alert("Login Gagal");
-    }
+    axios.post(`http://localhost:5000/signIn`, data)
+    .then(res =>{
+      if (res.data.status === 'berhasil') {
+        Cookies.set('id_kategori', res.data.data[0].id_kategori)
+        Cookies.set('username', res.data.data[0].username)
+        alert('Login Berhasil')
+        navigate("/")
+      } else {
+        alert('Login Gagal')
+      }
+    })
   };
 
   return (

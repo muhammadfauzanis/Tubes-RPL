@@ -3,7 +3,7 @@ import logo from "../assets/images/Logo.png";
 
 function Navbar() {
   return (
-    <nav className=" bg-[#798880] fixed top-0 left-0 w-full">
+    <nav className=" bg-[#798880] fixed top-0 left-0 w-full z-10">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <img src={logo} alt="" className="h-20" />
         <div class="hidden w-full md:block md:w-auto">
