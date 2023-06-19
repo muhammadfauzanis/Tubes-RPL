@@ -77,7 +77,7 @@ function FormCard() {
           {...register("tanggal", {
             required: "Tanggal tidak boleh kosong",
             pattern: {
-              value: /^(19dd|20[0-2]d|2023)$/,
+              value: /^(31dd|12[0-2]d|2024)$/,
               message: "Mohon masukkan tahun yang benar",
             },
           })}
