@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import Footer from "../Components/Footer";
 import Hero from "../Components/Hero";
 import Navbar from "../Components/Navbar";
@@ -13,7 +14,7 @@ function Home() {
         <Hero />
       </div>
       <div className="bg-[#4E6C50]">
-        <ReportList/>
+        <ReportList user={Cookies.get('id_kategori')}/>
       </div>
       <Timeline />
       <Footer />

@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie'
 import heroImage from "../assets/images/hero.jpg";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function Login() {
   const [visible, setVisible] = useState(true);
@@ -36,10 +37,20 @@ function Login() {
       if (res.data.status === 'berhasil') {
         Cookies.set('id_kategori', res.data.data[0].id_kategori)
         Cookies.set('username', res.data.data[0].username)
-        alert('Login Berhasil')
+        Swal.fire({
+          icon: "success",
+          title: "Login Berhasil",
+          background: "#61876E",
+          timer: 2000
+        });
         navigate("/")
       } else {
-        alert('Login Gagal')
+        Swal.fire({
+          icon: "error",
+          title: 'Login Gagal',
+          text: "USername atau Kata Sandi Salah",
+          timer: 2000
+        })
       }
     })
   };
@@ -48,6 +59,7 @@ function Login() {
     <div
       className="flex justify-center content-center h-screen w-screen "
       style={{
+        // backgroundColor: '#f1f1f1',
         backgroundImage: `url(${heroImage})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",

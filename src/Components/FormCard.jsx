@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { GrAttachment } from "react-icons/gr";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 function FormCard() {
@@ -13,6 +14,7 @@ function FormCard() {
     reset,
   } = useForm();
   const [instansi, setInstansi] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     axios.get(`http://localhost:5000/instansi`)
@@ -26,13 +28,12 @@ function FormCard() {
   const onSubmit = (data) => {
     const isFormValid = Object.values(data).every((value) => value !== "");
     if (isFormValid) {
-      setShowPopup(true)
-      setTimeout(() => {
         axios.post(`http://localhost:5000/laporan`, data)  
         .then(res => {
+          popUp()
           reset();
+          navigate('/')
       })
-      }, 3000)
 
     }
   };
@@ -46,6 +47,7 @@ function FormCard() {
       color: "#fff",
       iconColor: "#A6BB8D",
       confirmButtonColor: "#A6BB8D",
+      timer: 2000
     });
   };
 
@@ -146,11 +148,11 @@ function FormCard() {
             <input id="file-upload" type="file" className="hidden" />
           </label>
           <button
-            onClick={() => {
-              if (showPopUp) {
-                popUp();
-              }
-            }}
+            // onClick={() => {
+            //   if (showPopUp) {
+            //     popUp();
+            //   }
+            // }}
             className=" bg-[#85a888] p-3 text-white rounded-md w-32 hover:bg-[#5d9461] transition "
             type="submit"
           >
