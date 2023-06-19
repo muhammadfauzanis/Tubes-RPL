@@ -1,4 +1,3 @@
-import { Select } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -34,7 +33,7 @@ function FormCard() {
           reset();
       })
       }, 3000)
-      
+
     }
   };
 
@@ -126,27 +125,14 @@ function FormCard() {
               <option value={k.nama}>{k.nama}</option>
             )
           })}
-
-        </select>
-        {/* placeholder= 'Instansi Tujuan'
-        options={instansi.map((item) => ({
-          label: item.nama,
-          value: item.nama
-        }))}
-        /> */}
-        {/* <input
-          className="p-3 rounded-md border-2 border-black border-transparent bg-[#d7e4d7]"
-          type="text"
-          placeholder="Instansi Tujuan"
-          {...register("instansi", {
-            required: "Instansi tidak boleh kosong",
-          })}
-        />
-        {errors.instansi && (
+          {errors.instansi && (
           <p className="text-red-500 text-sm px-3">
             {errors.instansi?.message}
           </p>
-        )} */}
+          )}
+          
+
+        </select>
         <div className="flex justify-between pr-7 mt-20 mb-16">
           <label
             htmlFor="file-upload"
