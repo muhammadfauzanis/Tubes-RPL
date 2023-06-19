@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { GrAttachment } from "react-icons/gr";
 import Swal from "sweetalert2";
@@ -11,12 +12,26 @@ function FormCard() {
     formState: { errors },
     reset,
   } = useForm();
+  const [instansi, setInstansi] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/instansi`)
+      .then((res) => {
+        setInstansi(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const onSubmit = (data) => {
     const isFormValid = Object.values(data).every((value) => value !== "");
     if (isFormValid) {
       setShowPopup(true);
-      reset();
+      setTimeout(() => {
+        axios.post(`http://localhost:5000/laporan`, data).then((res) => {
+          reset();
+        });
+      }, 3000);
     }
   };
 
@@ -61,7 +76,7 @@ function FormCard() {
           cols="30"
           rows="10"
           placeholder="Ketik Isi Laporan Anda"
-          {...register("isiLaporan", {
+          {...register("isi", {
             required: "Isi Laporan tidak boleh kosong",
           })}
         ></textarea>
@@ -76,10 +91,10 @@ function FormCard() {
           placeholder="Pilih Tanggal Kejadian"
           {...register("tanggal", {
             required: "Tanggal tidak boleh kosong",
-            pattern: {
-              value: /^(31dd|12[0-2]d|2024)$/,
-              message: "Mohon masukkan tahun yang benar",
-            },
+            // pattern: {
+            //   value: /^(19dd|20[0-2]d|2023)$/,
+            //   message: "Mohon masukkan tahun yang benar",
+            // },
           })}
         />
         {errors.tanggal && (
@@ -96,19 +111,26 @@ function FormCard() {
         {errors.lokasi && (
           <p className="text-red-500 text-sm px-3">{errors.lokasi?.message}</p>
         )}
-        <input
-          className="p-3 rounded-md border-2 border-black border-transparent bg-[#d7e4d7]"
-          type="text"
+
+        <select
+          className="p-3 rounded-md border-2 border-black border-transparent bg-[#d7e4d7] "
           placeholder="Instansi Tujuan"
-          {...register("instansi", {
-            required: "Instansi tidak boleh kosong",
+          {...register("tujuan", {
+            required: "Tujuan tidak boleh kosong",
           })}
-        />
-        {errors.instansi && (
-          <p className="text-red-500 text-sm px-3">
-            {errors.instansi?.message}
-          </p>
-        )}
+        >
+          <option value="" className="text-gray-400">
+            Instansi Tujuan
+          </option>
+          {instansi.map((k) => {
+            return <option value={k.nama}>{k.nama}</option>;
+          })}
+          {errors.instansi && (
+            <p className="text-red-500 text-sm px-3">
+              {errors.instansi?.message}
+            </p>
+          )}
+        </select>
         <div className="flex justify-between pr-7 mt-20 mb-16">
           <label
             htmlFor="file-upload"
