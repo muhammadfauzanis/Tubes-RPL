@@ -4,17 +4,17 @@ import Cookies from "js-cookie";
 
 function Navbar() {
   const handleLogout = () => {
-    Cookies.remove('username')
-    Cookies.remove('id_kategori')
-    window.location.reload(false)
-  }
+    Cookies.remove("username");
+    Cookies.remove("id_kategori");
+    window.location.reload(false);
+  };
 
   return (
     <nav className=" bg-[#798880] fixed top-0 left-0 w-full z-10">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <img src={logo} alt="" className="h-20" />
-        <div class="hidden w-full md:block md:w-auto">
-          <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 ">
+        <div className="hidden w-full md:block md:w-auto">
+          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 ">
             <li>
               <Link
                 className="block py-2 pl-3 text-white font-bold rounded md:bg-transparentmd:p-0  cursor-pointer hover:text-[#A6BB8D] transition duration-200 ease-in-out"
@@ -31,15 +31,13 @@ function Navbar() {
                 Isi Form
               </Link>
             </li>
-            {Cookies.get('username') !== undefined &&
+            {Cookies.get("username") !== undefined && (
               <li onClick={handleLogout}>
-              <p 
-                className="block py-2 pl-3 text-white font-bold rounded md:bg-transparentmd:p-0  cursor-pointer hover:text-[#A6BB8D] transition duration-200 ease-in-out"
-              >
-                Logout
-              </p>
-            </li>
-            }
+                <p className="block py-2 pl-3 text-white font-bold rounded md:bg-transparentmd:p-0  cursor-pointer hover:text-[#A6BB8D] transition duration-200 ease-in-out">
+                  Logout
+                </p>
+              </li>
+            )}
           </ul>
         </div>
       </div>

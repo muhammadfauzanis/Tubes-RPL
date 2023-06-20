@@ -6,7 +6,7 @@ import {
 
 function Footer() {
   return (
-    <footer className="w-full bg-[#798880] p-5">
+    <footer className="w-full bg-[#798880] p-5 pt-16">
       <div className="flex flex-row flex-wrap items-center justify-center gap-y-6 gap-x-12 text-center md:justify-center cursor-pointer">
         <AiOutlineInstagram
           size={30}

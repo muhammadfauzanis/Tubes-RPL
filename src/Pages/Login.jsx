@@ -7,47 +7,69 @@ import {
 } from "react-icons/ai";
 
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 import heroImage from "../assets/images/hero.jpg";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function Login() {
   const [visible, setVisible] = useState(true);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
+  useEffect(() => {
+    if (Cookies.get("username") !== undefined) {
+      navigate("/");
+    }
+  });
 
   const navigate = useNavigate();
-  useEffect(() => {
-    if (Cookies.get('username') !== undefined) {
-      navigate('/')
-    }
 
-  })
+  // Validasi Login
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("signIn");
 
-  const onSubmit = (data) => {
-    axios.post(`http://localhost:5000/signIn`, data)
-    .then(res =>{
-      if (res.data.status === 'berhasil') {
-        Cookies.set('id_kategori', res.data.data[0].id_kategori)
-        Cookies.set('username', res.data.data[0].username)
-        alert('Login Berhasil')
-        navigate("/")
-      } else {
-        alert('Login Gagal')
-      }
-    })
+  const urlAdmin =
+    "https://expressjs-server-production-da81.up.railway.app/signIn";
+  const urlInstansi =
+    "https://expressjs-server-production-da81.up.railway.app/instansi";
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    const url = role === "signIn" ? urlAdmin : urlInstansi;
+
+    axios
+      .post(url, { username, password })
+      .then((res) => {
+        // data.username === userame && data.password === password
+        console.log(res.data);
+        if (res.data.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Login Berhasil",
+            background: "#61876E",
+            timer: 3000,
+          });
+          // navigate("/");
+        } else if (res.data.status === 400) {
+          Swal.fire({
+            icon: "error",
+            title: "Login Gagal",
+            text: "Username atau Kata Sandi Salah",
+            timer: 3000,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <div
       className="flex justify-center content-center h-screen w-screen "
       style={{
+        // backgroundColor: '#f1f1f1',
         backgroundImage: `url(${heroImage})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
@@ -60,17 +82,17 @@ function Login() {
         </h2>
         <FaRegUserCircle className="m-auto mb-16" size={80} />
 
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <form className="flex flex-col gap-4" onSubmit={handleLogin}>
           <div className="flex items-center md:justify-start ">
             <AiOutlineUser size={25} type="text" />
             <div className="relative">
               <input
+                onChange={(e) => setUsername(e.target.value)}
+                id="username"
+                value={username}
                 type="text"
                 name="username"
                 placeholder="Nama Pengguna"
-                {...register("username", {
-                  required: "Nama pengguna tidak boleh kosong",
-                })}
                 className="
                 block
                   border-0 
@@ -84,11 +106,6 @@ function Login() {
                   focus:ring-0
                 "
               />
-              {errors.username && (
-                <p className="text-red-500 text-xs px-3">
-                  {errors.username.message}
-                </p>
-              )}
             </div>
           </div>
 
@@ -97,12 +114,12 @@ function Login() {
             <AiOutlineLock size={25} />
             <div className="relative">
               <input
+                onChange={(e) => setPassword(e.target.value)}
+                id="password"
+                value={password}
                 type={visible ? "password" : "text"}
                 name="password"
                 placeholder="Kata Sandi"
-                {...register("password", {
-                  required: "Kata sandi tidak boleh kosong",
-                })}
                 className="
                   block
                   border-0 
@@ -116,11 +133,6 @@ function Login() {
                   focus:ring-0
                 "
               />
-              {errors.password && (
-                <p className="text-red-500 text-xs px-3">
-                  {errors.password.message}
-                </p>
-              )}
             </div>
             <div className="ml-12" onClick={() => setVisible(!visible)}>
               {visible ? (

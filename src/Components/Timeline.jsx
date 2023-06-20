@@ -3,8 +3,14 @@ import { RiShareForwardLine } from "react-icons/ri";
 import { LuClipboardCheck } from "react-icons/lu";
 import { TfiCommentAlt } from "react-icons/tfi";
 import { IoCheckmarkDone } from "react-icons/io5";
+import { Button, Space } from "antd";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function Timeline() {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-[#798880]">
       <ul className="flex flex-row m-auto justify-between gap-10 p-10 w-[90%] text-white">
@@ -54,6 +60,12 @@ function Timeline() {
           </p>
         </li>
       </ul>
+
+      <Link to="/form">
+        <button className=" bg-[#566e58] py-3 text-white rounded-md w-32 mt-10 hover:bg-[#3f6d42] transition flex m-auto justify-center w-[40%] text-4xl font-semibold">
+          LAPOR SEKARANG!
+        </button>
+      </Link>
     </div>
   );
 }

@@ -2,49 +2,87 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { GrAttachment } from "react-icons/gr";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 function FormCard() {
   const [showPopUp, setShowPopup] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
+  const { handleSubmit, reset } = useForm();
+
+  const [laporan, setLaporan] = useState({
+    judul: "",
+    isi: "",
+    tanggal: "",
+    lokasi: "",
+    tujuan: "",
+  });
+
   const [instansi, setInstansi] = useState([]);
+  const [valid, setValid] = useState(false);
+
+  const navigate = useNavigate();
+
+  const urlLaporan =
+    "https://expressjs-server-production-da81.up.railway.app/laporan";
+  const urlInstansi =
+    "https://expressjs-server-production-da81.up.railway.app/instansi";
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/instansi`)
+      .get(urlInstansi)
       .then((res) => {
-        setInstansi(res.data);
+        setInstansi(res.data.data);
       })
       .catch((err) => console.log(err));
   }, []);
 
-  const onSubmit = (data) => {
-    const isFormValid = Object.values(data).every((value) => value !== "");
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setLaporan({ ...laporan, [name]: value });
+    console.log(laporan);
+  };
+
+  const onSubmit = () => {
+    const isFormValid = Object.values(laporan).every((value) => value !== "");
     if (isFormValid) {
       setShowPopup(true);
       setTimeout(() => {
-        axios.post(`http://localhost:5000/laporan`, data).then((res) => {
+        axios.post(urlLaporan, laporan).then((res) => {
           reset();
+          setValid(true);
         });
+      }, 3000);
+    } else {
+      setTimeout(() => {
+        setShowPopup(true);
       }, 3000);
     }
   };
 
   const popUp = () => {
-    Swal.fire({
-      icon: "success",
-      title: "Terima Kasih Atas Laporan Anda!",
-      text: "Laporan Anda Akan Diproses Oleh Tim Kami",
-      background: "#61876E",
-      color: "#fff",
-      iconColor: "#A6BB8D",
-      confirmButtonColor: "#A6BB8D",
-    });
+    if (valid) {
+      Swal.fire({
+        icon: "success",
+        title: "Terima Kasih Atas Laporan Anda!",
+        text: "Laporan Anda Akan Diproses Oleh Tim Kami",
+        background: "#61876E",
+        color: "#fff",
+        iconColor: "#A6BB8D",
+        confirmButtonColor: "#A6BB8D",
+        time: 2000,
+      });
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Laporan Gagal!",
+        text: "Mohon lengkapi data anda",
+        background: "#61876E",
+        color: "#fff",
+        iconColor: "#A6BB8D",
+        confirmButtonColor: "#A6BB8D",
+        time: 2000,
+      });
+    }
   };
 
   return (
@@ -59,77 +97,61 @@ function FormCard() {
           </h1>
         </div>
         <input
+          onChange={handleInput}
+          value={laporan.judul}
+          name="judul"
+          id="judul"
           className="p-3 rounded-md border-2 border-transparent bg-[#d7e4d7]"
           type="text"
           placeholder="Ketik Judul Laporan Anda"
-          {...register("judul", {
-            required: "Judul tidak boleh kosong",
-          })}
         />
-        {errors.judul && (
-          <p className="text-red-500 text-sm px-3">{errors.judul?.message}</p>
-        )}
+
         <textarea
+          onChange={handleInput}
+          id="isi"
+          value={laporan.isi}
           className="p-3 rounded-md border-2 border-black border-transparent bg-[#d7e4d7]"
-          name=""
-          id=""
+          name="isi"
           cols="30"
           rows="10"
           placeholder="Ketik Isi Laporan Anda"
-          {...register("isi", {
-            required: "Isi Laporan tidak boleh kosong",
-          })}
         ></textarea>
-        {errors.isiLaporan && (
-          <p className="text-red-500 text-sm px-3">
-            {errors.isiLaporan?.message}
-          </p>
-        )}
+
         <input
+          onChange={handleInput}
+          name="tanggal"
+          id="tanggal"
+          value={laporan.tanggal}
           className="p-3 rounded-md border-2 border-black border-transparent bg-[#d7e4d7] text-gray-400 cursor-text"
           type="date"
           placeholder="Pilih Tanggal Kejadian"
-          {...register("tanggal", {
-            required: "Tanggal tidak boleh kosong",
-            // pattern: {
-            //   value: /^(19dd|20[0-2]d|2023)$/,
-            //   message: "Mohon masukkan tahun yang benar",
-            // },
-          })}
         />
-        {errors.tanggal && (
-          <p className="text-red-500 text-sm px-3">{errors.tanggal?.message}</p>
-        )}
+
         <input
+          onChange={handleInput}
+          name="lokasi"
+          id="lokasi"
+          value={laporan.lokasi}
           className="p-3 rounded-md border-2 border-black border-transparent bg-[#d7e4d7]"
           type="text"
           placeholder="Lokasi Kejadian"
-          {...register("lokasi", {
-            required: "Lokasi tidak boleh kosong",
-          })}
         />
-        {errors.lokasi && (
-          <p className="text-red-500 text-sm px-3">{errors.lokasi?.message}</p>
-        )}
 
         <select
+          onChange={handleInput}
+          name="tujuan"
+          id="tujuan"
+          value={laporan.tujuan}
           className="p-3 rounded-md border-2 border-black border-transparent bg-[#d7e4d7] "
           placeholder="Instansi Tujuan"
-          {...register("tujuan", {
-            required: "Tujuan tidak boleh kosong",
-          })}
         >
           <option value="" className="text-gray-400">
             Instansi Tujuan
           </option>
+
           {instansi.map((k) => {
-            return <option value={k.nama}>{k.nama}</option>;
+            return <option key={k.nama}>{k.nama}</option>;
           })}
-          {errors.instansi && (
-            <p className="text-red-500 text-sm px-3">
-              {errors.instansi?.message}
-            </p>
-          )}
         </select>
         <div className="flex justify-between pr-7 mt-20 mb-16">
           <label
