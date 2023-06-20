@@ -38,6 +38,13 @@ function Navbar() {
                 </p>
               </li>
             )}
+            {Cookies.get("id_kategori") === '1' && (
+              <li>
+                <p className="block py-2 pl-3 text-white font-bold rounded md:bg-transparentmd:p-0  cursor-pointer hover:text-[#A6BB8D] transition duration-200 ease-in-out">
+                  Add Instansi
+                </p>
+              </li>
+            )}
           </ul>
         </div>
       </div>

@@ -154,17 +154,16 @@ function FormCard() {
           })}
         </select>
         <div className="flex justify-between pr-7 mt-20 mb-16">
-          <label
+          {/* <label
             htmlFor="file-upload"
             className="file-upload flex flex-row items-center cursor-pointer"
           >
             <GrAttachment className="mr-5 ml-5 " size={20} />
             <span className="text-lg font-semibold text-green-100">
-              {/* Optional */}
               Unggah Lampiran
             </span>
             <input id="file-upload" type="file" className="hidden" />
-          </label>
+          </label> */}
           <button
             onClick={() => {
               if (showPopUp) {

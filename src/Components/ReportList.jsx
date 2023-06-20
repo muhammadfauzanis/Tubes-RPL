@@ -1,9 +1,10 @@
-import { List } from "antd";
+import { Button, Card, } from "antd";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
-import { AiFillAlert, AiFillEdit, AiOutlinePlusCircle } from "react-icons/ai";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
+import Swal from "sweetalert2";
+import ModalAddRespon from "./ModalAddRespon";
+import Cookies from "js-cookie";
 
 function ReportList(props) {
   const [data, setData] = useState([]);
@@ -17,107 +18,143 @@ function ReportList(props) {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(props.user);
-  //   axios
-  //     .get(`https://expressjs-server-production-da81.up.railway.app/laporan `)
-  //     .then((res) => {
-  //       setData([]);
-  //       res.data.map((k) => {
-  //         if (parseInt(props.user) <= 2 && k.status === false) {
-  //           setData((res) => [
-  //             ...res,
-  //             {
-  //               id_laporan: k.id_laporan,
-  //               tujuan: k.tujuan,
-  //               judul: k.judul,
-  //               isi: k.isi,
-  //               lokasi: k.lokasi,
-  //               tanggal_laporan: k.tanggal_laporan,
-  //               status: k.status,
-  //               id_respon: k.id_respon,
-  //               deskripsi: k.deskripsi,
-  //               tanggal_respon: k.tanggal_respon,
-  //             },
-  //           ]);
-  //         } else if (props.user === undefined && k.status === true) {
-  //           setData((res) => [
-  //             ...res,
-  //             {
-  //               id_laporan: k.id_laporan,
-  //               tujuan: k.tujuan,
-  //               judul: k.judul,
-  //               isi: k.isi,
-  //               lokasi: k.lokasi,
-  //               tanggal_laporan: k.tanggal_laporan,
-  //               status: k.status,
-  //               id_respon: k.id_respon,
-  //               deskripsi: k.deskripsi,
-  //               tanggal_respon: k.tanggal_respon,
-  //             },
-  //           ]);
-  //         }
-  //       });
-  //     })
-  //     .catch((err) => console.log(err));
-  //   console.log(data);
-  // }, [props.user]);
-
   const url =
-    "https://expressjs-server-production-da81.up.railway.app/laporan ";
-
+  "https://expressjs-server-production-da81.up.railway.app/laporan ";
   useEffect(() => {
+    // console.log(props.user);
     axios
-      .get(url)
+      .get(`https://expressjs-server-production-da81.up.railway.app/laporan `)
       .then((res) => {
         setData([]);
         res.data.data.map((k) => {
-          setData((res) => [
-            ...res,
-            {
-              id_laporan: k.id_laporan,
-              tujuan: k.tujuan,
-              judul: k.judul,
-              isi: k.isi,
-              lokasi: k.lokasi,
-              tanggal_laporan: k.tanggal_laporan,
-              status: k.status,
-              id_respon: k.id_respon,
-              deskripsi: k.deskripsi,
-              tanggal_respon: k.tanggal_respon,
-            },
-          ]);
+          let tanggalRespon = null
+          if (k.tanggal_respon !== null) {
+            tanggalRespon = k.tanggal_respon.substring(0, 10)
+          }
+          if (parseInt(props.user) === 1 && k.id_respon === null) {
+            setData((res) => [
+              ...res,
+              {
+                id_laporan: k.id_laporan,
+                tujuan: k.tujuan,
+                judul: k.judul,
+                isi: k.isi,
+                lokasi: k.lokasi,
+                tanggal_laporan: k.tanggal_laporan.substring(0, 10),
+                status: k.status,
+                id_respon: k.id_respon,
+                deskripsi: k.deskripsi,
+                tanggal_respon: tanggalRespon,
+              },
+            ]);
+          } else if (parseInt(props.user) === 2 && k.tujuan === Cookies.get('nama')) {
+            setData((res) => [
+              ...res,
+              {
+                id_laporan: k.id_laporan,
+                tujuan: k.tujuan,
+                judul: k.judul,
+                isi: k.isi,
+                lokasi: k.lokasi,
+                tanggal_laporan: k.tanggal_laporan.substring(0, 10),
+                status: k.status,
+                id_respon: k.id_respon,
+                deskripsi: k.deskripsi,
+                tanggal_respon: tanggalRespon,
+              },
+            ]);
+          }else if (props.user === undefined && k.status === true) {
+            setData((res) => [
+              ...res,
+              {
+                id_laporan: k.id_laporan,
+                tujuan: k.tujuan,
+                judul: k.judul,
+                isi: k.isi,
+                lokasi: k.lokasi,
+                tanggal_laporan: k.tanggal_laporan.substring(0, 10),
+                status: k.status,
+                id_respon: k.id_respon,
+                deskripsi: k.deskripsi,
+                tanggal_respon: tanggalRespon,
+              },
+            ]);
+          }
         });
       })
-      .catch((e) => {
-        console.log("e", e);
+      .catch((err) => console.log(err));
+    console.log(data);
+  },[]);
+
+  const handleEditReport = (idLaporan) => {
+    axios.put(`https://expressjs-server-production-da81.up.railway.app/laporan`, {"id": idLaporan })
+    .then(res => {
+      Swal.fire({
+        icon: "success",
+        title: "Tambah Laporan Berhasil",
+        background: "#61876E",
+        timer: 2000,
       });
-  });
-
-  const handleEdit = () => {};
-
-  const handleAddRespon = () => {};
-
-  let itemsEdit;
-  if (props.user === "1") {
-    itemsEdit = [
-      <AiOutlinePlusCircle
-        style={{ cursor: "pointer", fontSize: 24 }}
-        onClick={handleEdit}
-      />,
-      <AiFillEdit
-        style={{ cursor: "pointer", fontSize: 24 }}
-        onClick={handleAddRespon}
-      />,
-    ];
-  } else if (props.user === "2") {
-    itemsEdit = [
-      <AiFillEdit
-        style={{ cursor: "pointer", fontSize: 24 }}
-        onClick={handleAddRespon}
-      />,
-    ];
+      window.location.reload(false)
+      // console.log(res.data)
+    })
+    .catch(err => console.log(err))
   }
+
+ 
+
+  // useEffect(() => {
+  //   axios
+  //     .get(url)
+  //     .then((res) => {
+  //       setData([]);
+  //       res.data.data.map((k) => {
+  //         setData((res) => [
+  //           ...res,
+  //           {
+  //             id_laporan: k.id_laporan,
+  //             tujuan: k.tujuan,
+  //             judul: k.judul,
+  //             isi: k.isi,
+  //             lokasi: k.lokasi,
+  //             tanggal_laporan: k.tanggal_laporan,
+  //             status: k.status,
+  //             id_respon: k.id_respon,
+  //             deskripsi: k.deskripsi,
+  //             tanggal_respon: k.tanggal_respon,
+  //           },
+  //         ]);
+  //       });
+  //     })
+  //     .catch((e) => {
+  //       console.log("e", e);
+  //     });
+  // });
+
+  // const handleEdit = () => {};
+
+  // const handleAddRespon = () => {};
+
+  // let itemsEdit;
+  // if (props.user === "1") {
+  //   itemsEdit = [
+  //     <AiOutlinePlusCircle
+  //       style={{ cursor: "pointer", fontSize: 24 }}
+  //       onClick={handleEdit}
+  //     />,
+  //     <AiFillEdit
+  //       style={{ cursor: "pointer", fontSize: 24 }}
+  //       onClick={handleAddRespon}
+  //     />,
+  //   ];
+  // } else if (props.user === "2") {
+  //   itemsEdit = [
+  //     <AiFillEdit
+  //       style={{ cursor: "pointer", fontSize: 24 }}
+  //       onClick={handleAddRespon}
+  //     />,
+  //   ];
+  // }
 
   return (
     <div className="flex justify-center w-full h-full ">
@@ -157,54 +194,33 @@ function ReportList(props) {
               } `}
             >
               <div className="text-xl">
-                <h3>Instansi : {data.tujuan}</h3>
+                {/* <p>Status: {data.status.toString()}</p> */}
+                <h3>Tujuan : {data.tujuan}</h3>
                 <h3>Tempat : {data.lokasi}</h3>
                 <h3>Tanggal : {data.tanggal_laporan}</h3>
                 <p className="text-lg mt-10">{data.isi}</p>
+
+                {(data.status === true && data.id_respon !== null) && 
+                <Card
+                style={{
+                  marginTop: 20
+                }}
+                  type="inner"
+                  title="Respon"
+                  extra={data.tanggal_respon}
+                >
+                  {data.deskripsi}
+                </Card>}
+
+                <div className="flex gap-14 mt-4">
+                  {data.status === false && parseInt(props.user) === 1 && <Button size="large" type="primary" onClick={() => handleEditReport(data.id_laporan)} >Terima</Button>}
+                  {(data.id_respon === null && parseInt(props.user) <= 2) && <ModalAddRespon id={data.id_laporan} />}
+                </div>
               </div>
             </div>
           </div>
         ))}
       </div>
-
-      {/* <List
-    size='large'
-    className="p-12 text-white "
-    itemLayout="horizontal"
-    dataSource={data}
-    renderItem={(item) => (
-      <List.Item key={item.id}
-      actions={itemsEdit}
-      style={{
-        fontSize: 18,
-        color: 'white',
-        marginBottom: 14
-      }}
-      > 
-          <List.Item.Meta
-          avatar={<AiFillAlert color='black' />}
-            title={item.judul}
-            description={item.lokasi}
-          />
-        {item.isi}
-
-        {item.deskripsi !== null && 
-        <List.Item.Meta
-        style={{
-          marginLeft: 40,
-          marginTop: 5,
-          fontSize: 25,
-          borderRadius: 20,
-          padding: 8,
-          border: '1px solid white',
-          width: '50%'
-        }}
-            title={item.deskripsi}
-          />
-        }
-      </List.Item>
-    )}
-    />  */}
     </div>
   );
 }
