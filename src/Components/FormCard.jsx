@@ -1,12 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { GrAttachment } from "react-icons/gr";
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 function FormCard() {
-  const [showPopUp, setShowPopup] = useState(false);
   const { handleSubmit, reset } = useForm();
 
   const [laporan, setLaporan] = useState({
@@ -18,9 +15,6 @@ function FormCard() {
   });
 
   const [instansi, setInstansi] = useState([]);
-  const [valid, setValid] = useState(false);
-
-  const navigate = useNavigate();
 
   const urlLaporan =
     "https://expressjs-server-production-da81.up.railway.app/laporan";
@@ -45,22 +39,22 @@ function FormCard() {
   const onSubmit = () => {
     const isFormValid = Object.values(laporan).every((value) => value !== "");
     if (isFormValid) {
-      setShowPopup(true);
-      setTimeout(() => {
-        axios.post(urlLaporan, laporan).then((res) => {
+        axios.post(urlLaporan, laporan)
+        .then((res) => {
+          setTimeout(() => {
+            popUp(true)
+          },1000)
           reset();
-          setValid(true);
-        });
-      }, 3000);
+        })
     } else {
       setTimeout(() => {
-        setShowPopup(true);
-      }, 3000);
+        popUp(false)
+      }, 1000);
     }
   };
 
-  const popUp = () => {
-    if (valid) {
+  const popUp = (status) => {
+    if (status) {
       Swal.fire({
         icon: "success",
         title: "Terima Kasih Atas Laporan Anda!",
@@ -165,11 +159,6 @@ function FormCard() {
             <input id="file-upload" type="file" className="hidden" />
           </label> */}
           <button
-            onClick={() => {
-              if (showPopUp) {
-                popUp();
-              }
-            }}
             className=" bg-[#85a888] p-3 text-white rounded-md w-32 hover:bg-[#5d9461] transition "
             type="submit"
           >

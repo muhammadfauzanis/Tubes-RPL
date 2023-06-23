@@ -47,7 +47,7 @@ function ReportList(props) {
                 tanggal_respon: tanggalRespon,
               },
             ]);
-          } else if (parseInt(props.user) === 2 && k.tujuan === Cookies.get('nama')) {
+          } else if ((parseInt(props.user) === 2 && k.tujuan === Cookies.get('nama')) && k.status === true ) {
             setData((res) => [
               ...res,
               {
