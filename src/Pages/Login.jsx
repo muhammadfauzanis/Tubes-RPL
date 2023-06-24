@@ -30,19 +30,19 @@ function Login() {
 
   const urlAdmin =
     "https://expressjs-server-production-da81.up.railway.app/signIn";
-  // const urlInstansi =
-  //   "https://expressjs-server-production-da81.up.railway.app/instansi";
+  const urlInstansi =
+    "https://expressjs-server-production-da81.up.railway.app/instansi";
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // const url = role === "signIn" ? urlAdmin : urlInstansi;
+    const url = role === "signIn" ? urlAdmin : urlInstansi;
 
     axios
-      .post(urlAdmin, { username, password })
+      .post(url, { username, password })
       .then((res) => {
         // data.username === userame && data.password === password
-        let userInfo = res.data.data
+        let userInfo = res.data.data;
         if (res.data.status === 200) {
           Swal.fire({
             icon: "success",
@@ -51,13 +51,11 @@ function Login() {
             timer: 3000,
           });
           userInfo.map((k) => {
-            // console.log(k.username)
-            Cookies.set('nama', k.nama)
-            Cookies.set('username', k.username)
-            Cookies.set('id_kategori', k.id_kategori)
-          })
+            Cookies.set("nama", k.nama);
+            Cookies.set("username", k.username);
+            Cookies.set("id_kategori", k.id_kategori);
+          });
           navigate("/");
-          // console.log(userInfo)
         } else if (res.data.status === 400) {
           Swal.fire({
             icon: "error",
