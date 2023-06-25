@@ -163,15 +163,14 @@ function ReportList(props) {
                   </Card>
                 )}
 
-                <div className="flex gap-14 mt-4">
+                <div className="flex gap-14 mt-6  ">
                   {data.status === false && parseInt(props.user) === 1 && (
-                    <Button
-                      size="large"
-                      type="primary"
+                    <button
                       onClick={() => handleEditReport(data.id_laporan)}
+                      className="bg-[#61876E] hover:bg-[#708377] transition text-white font-semibold text-sm py-2 px-4 rounded-lg"
                     >
                       Terima
-                    </Button>
+                    </button>
                   )}
                   {data.id_respon === null && parseInt(props.user) <= 2 && (
                     <ModalAddRespon id={data.id_laporan} />
