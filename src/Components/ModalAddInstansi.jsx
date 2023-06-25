@@ -1,7 +1,9 @@
 import { Button, Form, Modal, Input } from 'antd';
+import Title from 'antd/es/skeleton/Title';
 import axios from 'axios';
 import { useState } from 'react';
 import { BsPlusCircle } from 'react-icons/bs';
+import Swal from 'sweetalert2';
   
   function ModalAddInstansi(props) {
     
@@ -19,12 +21,33 @@ import { BsPlusCircle } from 'react-icons/bs';
 
     const onFinish = (values) => {
         console.log(values)
-        // axios.post(``, addRespon)
-        // .then(res => {
-
-        //     window.location.reload(false)
-        // })
-        // .catch(err => console.log(err))
+        axios.post(`https://expressjs-server-production-da81.up.railway.app/instansi`, values)
+        .then(res => {
+            Swal.fire({
+                icon: "success",
+                title: "Tambah Instansi Berhasil",
+                background: "#61876E",
+                color: "#fff",
+                iconColor: "#A6BB8D",
+                confirmButtonColor: "#A6BB8D",
+                time: 2000,
+              });
+              setTimeout(() => {
+                window.location.reload(false)
+              }, 2000)
+        })
+        .catch(err => {
+            Swal.fire({
+                icon: "warning",
+                title: "Tambah Instansi Gagal!",
+                text: "Mohon lengkapi data anda",
+                background: "#61876E",
+                color: "#fff",
+                iconColor: "#A6BB8D",
+                confirmButtonColor: "#A6BB8D",
+                time: 2000,
+              });
+        })
     };
     
     const onFinishFailed = (errorInfo) => {
@@ -33,7 +56,7 @@ import { BsPlusCircle } from 'react-icons/bs';
 
     return (
         <>
-            <Button type="primary" onClick={showModal} icon={<BsPlusCircle />} >Tambah Instansi</Button>
+            <p onClick={showModal}> Tambah Instansi</p>
                 
             <Modal title="Tambah Instansi" open={isModalOpen} onCancel={handleCancel} footer={null} >
                 <Form

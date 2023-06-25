@@ -2,6 +2,8 @@ import {PieChartOutlined, OrderedListOutlined, BankOutlined, UserAddOutlined } f
 import {Menu } from 'antd';
 import { useEffect, useState } from 'react';
 import ModalAddInstansi from './ModalAddInstansi';
+import Tabel from './Tabel';
+import Grafik from './Grafik';
 
   function getItem(label, key, icon, children, type) {
     return {
@@ -16,7 +18,7 @@ import ModalAddInstansi from './ModalAddInstansi';
     getItem('Grafik Laporan', '1', <PieChartOutlined />),
     getItem('Laporan', '2', <OrderedListOutlined  />),
     getItem('Instansi', '3', <BankOutlined />),
-    getItem('Tambah Instansi', '4', <UserAddOutlined />),
+    getItem(<ModalAddInstansi />,'4', <UserAddOutlined />),
   ];
   
   
@@ -28,23 +30,19 @@ import ModalAddInstansi from './ModalAddInstansi';
     useEffect(() => {
         switch (keyContent) {            
             case 1:
-                setContent(<h1>Grafik</h1>)
+                setContent(<Grafik />)
                 break;
 
             case 2:
-                setContent(<h1>Table Laporan</h1>)
+                setContent(<Tabel name = 'laporan' />)
                 break;
             
             case 3:
-                setContent(<h1>Table Instansi</h1>)
-                break;
-
-             case 4:
-                setContent(<ModalAddInstansi />)
+                setContent(<Tabel name = 'instansi' />)
                 break;
 
             default:
-                setContent(<h1>Grafik</h1>)
+                setContent(<Grafik />)
                 break;
         }
     }, [keyContent])
@@ -77,7 +75,7 @@ import ModalAddInstansi from './ModalAddInstansi';
                 
                 
             }}>
-            <div className="text-white h-full mt-24 bg-black">{content}</div>
+            <div className="text-white h-full mt-24 ">{content}</div>
             </div>
         </>
     );
