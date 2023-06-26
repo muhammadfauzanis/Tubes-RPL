@@ -1,4 +1,4 @@
-import { Button, Card } from "antd";
+import { Card } from "antd";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
@@ -18,15 +18,13 @@ function ReportList(props) {
     }
   };
 
-  const url =
-    "https://expressjs-server-production-da81.up.railway.app/laporan ";
+
   useEffect(() => {
-    // console.log(props.user);
     axios
       .get(`https://expressjs-server-production-da81.up.railway.app/laporan `)
       .then((res) => {
         setData([]);
-        res.data.data.map((k) => {
+        res.data.data.map((k, i) => {
           let tanggalRespon = null;
           if (k.tanggal_respon !== null) {
             tanggalRespon = k.tanggal_respon.substring(0, 10);
@@ -87,7 +85,7 @@ function ReportList(props) {
       })
       .catch((err) => console.log(err));
     console.log(data);
-  }, []);
+  }, [data, props.user]);
 
   const handleEditReport = (idLaporan) => {
     axios
@@ -101,7 +99,6 @@ function ReportList(props) {
           background: "#61876E",
           timer: 2000,
         });
-        window.location.reload(false);
       })
       .catch((err) => console.log(err));
   };
